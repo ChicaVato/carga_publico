@@ -2,11 +2,11 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Fecha Flip Clock Midnight</title>
+  <title>Fecha Flip - 3 Rectángulos</title>
   <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
   <style>
     body {
-      background-color: #121212;
+      background-color: #191919;
       font-family: 'Anton', sans-serif;
       display: flex;
       flex-direction: column;
@@ -28,20 +28,15 @@
       justify-content: center;
     }
 
-    .flip-unit {
-      display: flex;
-      gap: 6px;
-    }
-
     .flip-card {
-      width: 60px;
-      height: 80px;
+      width: 120px;
+      height: 100px;
       background: #222;
       border-radius: 8px;
       box-shadow: inset 0 -3px 0 #000;
       position: relative;
       color: white;
-      font-size: 46px;
+      font-size: 48px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -75,37 +70,13 @@
 <body>
   <div class="day-name" id="day-name">----</div>
   <div class="flip-date">
-    <div class="flip-unit" id="day-unit">
-      <div class="flip-card">-</div>
-      <div class="flip-card">-</div>
-    </div>
-    <div class="flip-unit" id="month-unit">
-      <div class="flip-card">-</div>
-      <div class="flip-card">-</div>
-    </div>
-    <div class="flip-unit" id="year-unit">
-      <div class="flip-card">-</div>
-      <div class="flip-card">-</div>
-      <div class="flip-card">-</div>
-      <div class="flip-card">-</div>
-    </div>
+    <div class="flip-card" id="day-box">--</div>
+    <div class="flip-card" id="month-box">--</div>
+    <div class="flip-card" id="year-box">----</div>
   </div>
 
   <script>
     const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-
-    function setDigits(unitId, value) {
-      const digits = value.split('');
-      const unit = document.getElementById(unitId);
-      unit.querySelectorAll('.flip-card').forEach((card, i) => {
-        if (card.textContent !== digits[i]) {
-          card.classList.remove('flipIn');
-          void card.offsetWidth;
-          card.textContent = digits[i] || '-';
-          card.classList.add('flipIn');
-        }
-      });
-    }
 
     function updateDate() {
       const now = new Date();
@@ -114,10 +85,10 @@
       const month = String(now.getMonth() + 1).padStart(2, '0');
       const year = String(now.getFullYear());
 
-      document.getElementById('day-name').textContent = dayName;
-      setDigits('day-unit', day);
-      setDigits('month-unit', month);
-      setDigits('year-unit', year);
+      document.getElementById("day-name").textContent = dayName;
+      document.getElementById("day-box").textContent = day;
+      document.getElementById("month-box").textContent = month;
+      document.getElementById("year-box").textContent = year;
     }
 
     function updateAtMidnight() {
@@ -128,7 +99,7 @@
       setTimeout(() => {
         updateDate();
         updateAtMidnight(); // reprogramar para la siguiente medianoche
-      }, msUntilMidnight + 1000); // asegurar 1s después para evitar colisión
+      }, msUntilMidnight + 1000);
     }
 
     updateDate();
