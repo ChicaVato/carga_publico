@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Fecha actual</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 100px;
+      font-size: 36px;
+    }
+  </style>
+</head>
+<body>
+  <div id="fecha"></div>
+
+  <script>
+    const dias = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+    const meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
+                   "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+
+    const hoy = new Date();
+    const diaNombre = dias[hoy.getDay()];
+    const diaNumero = hoy.getDate().toString().padStart(2, "0");
+    const mes = (hoy.getMonth() + 1).toString().padStart(2, "0");
+    const anio = hoy.getFullYear();
+
+    const fechaTexto = `${diaNombre} ${diaNumero} / ${mes} / ${anio}`;
+    document.getElementById("fecha").textContent = fechaTexto;
+  </script>
+</body>
+</html>
+
