@@ -2,35 +2,137 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Fecha actual</title>
+  <title>Fecha Flip Clock Midnight</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
   <style>
     body {
       background-color: #121212;
+      font-family: 'Anton', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
       color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding-top: 100px;
+    }
+
+    .day-name {
       font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    .flip-date {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+    }
+
+    .flip-unit {
+      display: flex;
+      gap: 6px;
+    }
+
+    .flip-card {
+      width: 60px;
+      height: 80px;
+      background: #222;
+      border-radius: 8px;
+      box-shadow: inset 0 -3px 0 #000;
+      position: relative;
+      color: white;
+      font-size: 46px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-shadow: 0 1px 0 #000;
+      overflow: hidden;
+      animation: flipIn 0.6s ease-in-out;
+    }
+
+    .flip-card::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background: #666;
+      top: 50%;
+      left: 0;
+    }
+
+    @keyframes flipIn {
+      0% {
+        transform: rotateX(90deg);
+        opacity: 0;
+      }
+      100% {
+        transform: rotateX(0deg);
+        opacity: 1;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="fecha"></div>
+  <div class="day-name" id="day-name">----</div>
+  <div class="flip-date">
+    <div class="flip-unit" id="day-unit">
+      <div class="flip-card">-</div>
+      <div class="flip-card">-</div>
+    </div>
+    <div class="flip-unit" id="month-unit">
+      <div class="flip-card">-</div>
+      <div class="flip-card">-</div>
+    </div>
+    <div class="flip-unit" id="year-unit">
+      <div class="flip-card">-</div>
+      <div class="flip-card">-</div>
+      <div class="flip-card">-</div>
+      <div class="flip-card">-</div>
+    </div>
+  </div>
 
   <script>
-    const dias = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
-    const meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
-                   "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+    const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
 
-    const hoy = new Date();
-    const diaNombre = dias[hoy.getDay()];
-    const diaNumero = hoy.getDate().toString().padStart(2, "0");
-    const mes = (hoy.getMonth() + 1).toString().padStart(2, "0");
-    const anio = hoy.getFullYear();
+    function setDigits(unitId, value) {
+      const digits = value.split('');
+      const unit = document.getElementById(unitId);
+      unit.querySelectorAll('.flip-card').forEach((card, i) => {
+        if (card.textContent !== digits[i]) {
+          card.classList.remove('flipIn');
+          void card.offsetWidth;
+          card.textContent = digits[i] || '-';
+          card.classList.add('flipIn');
+        }
+      });
+    }
 
-    const fechaTexto = `${diaNombre} ${diaNumero} / ${mes} / ${anio}`;
-    document.getElementById("fecha").textContent = fechaTexto;
+    function updateDate() {
+      const now = new Date();
+      const dayName = dias[now.getDay()];
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = String(now.getFullYear());
+
+      document.getElementById('day-name').textContent = dayName;
+      setDigits('day-unit', day);
+      setDigits('month-unit', month);
+      setDigits('year-unit', year);
+    }
+
+    function updateAtMidnight() {
+      const now = new Date();
+      const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      const msUntilMidnight = nextMidnight - now;
+
+      setTimeout(() => {
+        updateDate();
+        updateAtMidnight(); // reprogramar para la siguiente medianoche
+      }, msUntilMidnight + 1000); // asegurar 1s después para evitar colisión
+    }
+
+    updateDate();
+    updateAtMidnight();
   </script>
 </body>
 </html>
-
